@@ -38,37 +38,45 @@ class Tile() extends Module{
       val setup                  = Input(Bool())
 
       val currentPC              = Output(UInt())
+   
+      val ALUOut                 = Output(UInt(32.W))
+      val instruRs1              = Output(UInt(5.W))
+      val aluOP                  = Output(UInt(4.W))
     })
 
-  val CPU = Module(new CPU).testHarness
+  val CPU = Module(new CPU)
 
-  CPU.setupSignals.IMEMsignals.address     := io.IMEMAddress
-  CPU.setupSignals.IMEMsignals.instruction := io.IMEMWriteData
-  CPU.setupSignals.IMEMsignals.setup       := io.setup
+  CPU.testHarness.setupSignals.IMEMsignals.address     := io.IMEMAddress
+  CPU.testHarness.setupSignals.IMEMsignals.instruction := io.IMEMWriteData
+  CPU.testHarness.setupSignals.IMEMsignals.setup       := io.setup
 
-  CPU.setupSignals.DMEMsignals.writeEnable := io.DMEMWriteEnable
-  CPU.setupSignals.DMEMsignals.dataAddress := io.DMEMAddress
-  CPU.setupSignals.DMEMsignals.dataIn      := io.DMEMWriteData
-  CPU.setupSignals.DMEMsignals.setup       := io.setup
+  CPU.testHarness.setupSignals.DMEMsignals.writeEnable := io.DMEMWriteEnable
+  CPU.testHarness.setupSignals.DMEMsignals.dataAddress := io.DMEMAddress
+  CPU.testHarness.setupSignals.DMEMsignals.dataIn      := io.DMEMWriteData
+  CPU.testHarness.setupSignals.DMEMsignals.setup       := io.setup
 
-  CPU.setupSignals.registerSignals.readAddress  := io.regsAddress
-  CPU.setupSignals.registerSignals.writeEnable  := io.regsWriteEnable
-  CPU.setupSignals.registerSignals.writeAddress := io.regsAddress
-  CPU.setupSignals.registerSignals.writeData    := io.regsWriteData
-  CPU.setupSignals.registerSignals.setup        := io.setup
+  CPU.testHarness.setupSignals.registerSignals.readAddress  := io.regsAddress
+  CPU.testHarness.setupSignals.registerSignals.writeEnable  := io.regsWriteEnable
+  CPU.testHarness.setupSignals.registerSignals.writeAddress := io.regsAddress
+  CPU.testHarness.setupSignals.registerSignals.writeData    := io.regsWriteData
+  CPU.testHarness.setupSignals.registerSignals.setup        := io.setup
 
-  io.DMEMReadData := CPU.testReadouts.DMEMread
-  io.regsReadData := CPU.testReadouts.registerRead
+  io.DMEMReadData := CPU.testHarness.testReadouts.DMEMread
+  io.regsReadData := CPU.testHarness.testReadouts.registerRead
 
-  io.regsDeviceWriteAddress := CPU.regUpdates.writeAddress
-  io.regsDeviceWriteEnable  := CPU.regUpdates.writeEnable
-  io.regsDeviceWriteData    := CPU.regUpdates.writeData
+  io.regsDeviceWriteAddress := CPU.testHarness.regUpdates.writeAddress
+  io.regsDeviceWriteEnable  := CPU.testHarness.regUpdates.writeEnable
+  io.regsDeviceWriteData    := CPU.testHarness.regUpdates.writeData
 
-  io.memDeviceWriteAddress  := CPU.memUpdates.writeAddress
-  io.memDeviceWriteEnable   := CPU.memUpdates.writeEnable
-  io.memDeviceWriteData     := CPU.memUpdates.writeData
+  io.memDeviceWriteAddress  := CPU.testHarness.memUpdates.writeAddress
+  io.memDeviceWriteEnable   := CPU.testHarness.memUpdates.writeEnable
+  io.memDeviceWriteData     := CPU.testHarness.memUpdates.writeData
 
-  io.currentPC := CPU.currentPC
+  io.currentPC := CPU.testHarness.currentPC
+
+  io.ALUOut := CPU.io.ALUResult
+  io.instruRs1 := CPU.io.instruRs1
+  io.aluOP := CPU.io.aluOp
 }
 
 
