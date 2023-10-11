@@ -88,6 +88,13 @@ class InstructionDecode extends MultiIOModule {
     data1     := registers.io.readData1
     data2     := 0.U
   }
+  
+  // For the UTYPE
+  when(decoder.immType === 3.U){
+    data1     := io.instructionIn.immediateUType.asUInt
+    data2     := 12.U
+  }
+  
   // For LW
   when(decoder.immType === 0.U && decoder.controlSignals.memRead === 1.U){
     registers.io.readAddress1 := io.instructionIn.registerRs1 + io.instructionIn.immediateIType.asUInt

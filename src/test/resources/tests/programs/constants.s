@@ -1,7 +1,8 @@
 main:
   li x0, 0x0
   nop
-  li x1, 0xABCDEF0
+  lui x1, 0xABCDE
+  addi x1, x1, 0xF0 
   nop
   li x1, 32
   li x1, 0x800

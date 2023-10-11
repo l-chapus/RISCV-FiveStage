@@ -106,4 +106,10 @@ class ALU extends Module {
   when(io.aluOp === 7.U && io.immType === 0.U) {
     io.Result := io.op1 < op2ConvertImm.asUInt()
   }
+
+
+  // For the LUI operation
+  when(io.aluOp === 6.U && io.immType === 3.U) {
+    io.Result := io.op1
+  }
 }

@@ -74,7 +74,7 @@ class Decoder() extends Module {
     ANDI   -> List(Y,        N,       N,        N,       N,    branchType.DC, rs1,       imm,       ITYPE,        ALUOps.AND),
     XORI   -> List(Y,        N,       N,        N,       N,    branchType.DC, rs1,       imm,       ITYPE,        ALUOps.XOR),
     
-    //LI     -> List(Y,        Y,       N,        N,       N,    branchType.DC, rs1,       imm,       ITYPE,        ALUOps.ADD),
+    LUI    -> List(Y,        Y,       N,        N,       N,    branchType.DC, imm,      12.U,       UTYPE,        ALUOps.SLL),
     )
 
 
