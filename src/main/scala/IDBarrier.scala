@@ -41,7 +41,7 @@ class IDBarrier extends MultiIOModule {
   controlRegister := io.controlIn
   io.controlOut   := controlRegister
 
-  val immediateRegister = Reg(UInt(32.W))
+  val immediateRegister = Reg(UInt(3.W))
   immediateRegister := io.immediateIn
   io.immediateOut   := immediateRegister
 

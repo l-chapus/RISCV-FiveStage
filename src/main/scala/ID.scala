@@ -70,6 +70,7 @@ class InstructionDecode extends MultiIOModule {
 
   io.immediateOut   := decoder.immType
 
+
   val data1 = Wire(UInt(32.W))
   val data2 = Wire(UInt(32.W))
 

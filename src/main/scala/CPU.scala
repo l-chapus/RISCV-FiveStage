@@ -91,33 +91,19 @@ class CPU extends MultiIOModule {
 
 
   // MEMBARRIER
-  MEMBarrier.instructionIn  := EXBarrier.instructionOut
-  MEMBarrier.dataIn         := EXBarrier.ALUResultOut
-  
+  MEMBarrier.instructionIn    := EXBarrier.instructionOut
+  MEMBarrier.dataIn           := EXBarrier.ALUResultOut
+  MEMBarrier.controlSignalsIn := EXBarrier.controlSignalsOut
 
-  // LOAD VALUE
+  MEM.io.dataIn         := MEMBarrier.dataOut
+  MEM.io.instruction    := EXBarrier.instructionOut
+  MEM.io.controlSignals := EXBarrier.controlSignalsOut
+  
   when(EXBarrier.controlSignalsOut.memRead){
-    MEM.io.dataIn       := 0.U
-    MEM.io.dataAddress  := MEMBarrier.dataOut + EXBarrier.instructionOut.immediateIType.asUInt
-    MEM.io.writeEnable  := false.B
-    EX.io.readDataBIn   := MEM.io.dataOut
-  }.otherwise{
-    MEM.io.dataIn       := 0.U
-    MEM.io.dataAddress  := 0.U
-    MEM.io.writeEnable  := 0.U
-  }
-
-  // STORE VALUE
-  when(EXBarrier.controlSignalsOut.memWrite){
-    MEM.io.dataIn       := MEMBarrier.dataOut
-    MEM.io.dataAddress  := MEMBarrier.dataOut + EXBarrier.instructionOut.immediateSType.asUInt
-    MEM.io.writeEnable  := EXBarrier.controlSignalsOut.memWrite
-  }.otherwise{
-    MEM.io.dataIn       := 0.U
-    MEM.io.dataAddress  := 0.U
-    MEM.io.writeEnable  := 0.U
+    EX.io.readDataBIn  := MEM.io.dataOut
   }
   
+  // WB to the registers
   when(EXBarrier.instructionOut.registerRd === 0.U) {
     ID.io.writeEnable     := false.B
   }.otherwise {
@@ -126,7 +112,6 @@ class CPU extends MultiIOModule {
   ID.io.writeData       := EXBarrier.ALUResultOut
   ID.io.writeAddress    := EXBarrier.instructionOut.registerRd
   ID.io.writeEnable     := EXBarrier.controlSignalsOut.regWrite
-
 
   // DEBUG
    val io = IO(new Bundle {
